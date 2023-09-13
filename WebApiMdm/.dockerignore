@@ -1,0 +1,25 @@
+# Avoid copying the bin and obj directories
+**/bin/
+**/obj/
+
+# Avoid copying the .git directory
+.git/
+
+# Avoid copying .gitignore and .dockerignore
+.gitignore
+.dockerignore
+
+# Avoid copying README and other documentation files
+*.md
+
+# Avoid copying IDE settings
+.vscode/
+.idea/
+
+# macOS generated files
+.DS_Store
+
+# Temporary files
+*.tmp
+*.swp
+*.log

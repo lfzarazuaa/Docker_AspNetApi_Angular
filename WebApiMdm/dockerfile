@@ -1,0 +1,38 @@
+# Build stage
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
+
+WORKDIR /app
+
+# Copy and restore as separate layers
+COPY ./WebApiMdm/*.csproj ./WebApiMdm/
+WORKDIR /app/WebApiMdm
+RUN dotnet restore
+
+RUN dotnet dev-certs https -ep /https/aspnetapp.pfx -p devPassword
+
+# Copy entire project code and build
+COPY ./WebApiMdm ./
+RUN dotnet publish -c Release -o out
+
+# Production stage
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
+
+WORKDIR /app
+
+COPY --from=build-env /app/WebApiMdm/out .
+
+# Copy the HTTPS certificate
+COPY --from=build-env /https/aspnetapp.pfx /https/aspnetapp.pfx
+
+# Set environment variables for production execution.
+ENV ASPNETCORE_URLS="https://+;http://+"
+ENV ASPNETCORE_HTTPS_PORT=5001
+ENV ASPNETCORE_Kestrel__Certificates__Default__Password="devPassword"
+ENV ASPNETCORE_Kestrel__Certificates__Default__Path="/https/aspnetapp.pfx"
+
+# Expose ports 5000 and 5001
+EXPOSE 5000
+EXPOSE 5001
+
+# Entry point
+ENTRYPOINT ["dotnet", "WebApiMdm.dll"]

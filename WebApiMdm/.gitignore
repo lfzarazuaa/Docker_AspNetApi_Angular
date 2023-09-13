@@ -1,0 +1,54 @@
+# .NET Core and Visual Studio related
+*.dll
+*.exe
+*.pdb
+*.user
+*.rsuser
+*.suo
+*.nupkg
+*.log
+*.swp
+*.swo
+*.sw?
+
+# Built application files
+bin/
+obj/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.dbmdl
+*.dbproj.schemaview
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Tye
+.tye/
+
+# Visual Studio for Mac
+.vscode/
+
+# Rider
+.idea/
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Windows
+*.dll
+*.exe
+*.winmd
+
+# Others
+*.bak
+*.cache
+*.config
+*.swp
+*.DS_Store
