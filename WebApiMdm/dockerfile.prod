@@ -1,4 +1,4 @@
-# Use the official .NET 6 SDK image as the base image.
+# Build stage
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 
 # Set the working directory in the container.
@@ -14,27 +14,40 @@ COPY ./WebApiMdm/*.csproj ./WebApiMdm/
 WORKDIR /app/WebApiMdm
 RUN dotnet restore
 
-# Check if the project directory and project file exist in the container.
-RUN if [ ! -d WebApiMdm ] || [ ! -f WebApiMdm/WebApiMdm.csproj ]; then \
-  echo "Creating a new project"; \
-  dotnet new webapi -n WebApiMdm; \
-  else \
-  echo "Using existing project from local"; \
-  fi
-
 # Copy the entire source code from the host to the container.
 COPY ./WebApiMdm ./
 
 # Generate a development HTTPS certificate.
-RUN dotnet dev-certs https -ep /https/aspnetapp.pfx -p devPassword
+RUN dotnet dev-certs https -ep /https/aspnetapp.pfx -p prodPassword
 
 # Build the application.
-# RUN dotnet build
+RUN dotnet build
 
 # Expose ports.
 EXPOSE 5000
 EXPOSE 5001
 
-# Define the entry point of the container.
-# dotnet run
-CMD ["dotnet", "run"]
+RUN dotnet publish -c Release -o out
+
+# Production stage
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
+
+WORKDIR /app
+
+COPY --from=build-env /app/WebApiMdm/out .
+
+# Copy the HTTPS certificate
+COPY --from=build-env /https/aspnetapp.pfx /https/aspnetapp.pfx
+
+# Set environment variables for production execution.
+ENV ASPNETCORE_URLS="https://+;http://+"
+ENV ASPNETCORE_HTTPS_PORT=5001
+ENV ASPNETCORE_Kestrel__Certificates__Default__Password="prodPassword"
+ENV ASPNETCORE_Kestrel__Certificates__Default__Path="/https/aspnetapp.pfx"
+
+# Expose ports 5000 and 5001
+EXPOSE 5000
+EXPOSE 5001
+
+# COMMAND
+CMD ["dotnet", "WebApiMdm.dll"]

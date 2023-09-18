@@ -1,5 +1,5 @@
-# Build stage: Use Node.js to build the Angular app
-FROM node:18.12.0 AS build
+# Using Node.js 18 Hydrogen LTS
+FROM node:18.12.0
 
 # Set the working directory inside the container
 WORKDIR /app/MvmNewUI
@@ -16,16 +16,9 @@ RUN npm install
 # Copy the rest of the application to the container
 COPY ./MvmNewUI ./
 
-# Build the Angular app in production mode. This will create the /dist directory.
-RUN ng build
+# Expose port 4200 for ng serve
+EXPOSE 4200
 
-# Production stage: Use NGINX to serve the built Angular app
-FROM nginx:alpine
-
-# Copy the built app from the build container
-COPY --from=build /app/MvmNewUI/dist/mvm-new-ui /usr/share/nginx/html
-
-# Expose port 80 (default port for NGINX)
-EXPOSE 80
-
-# NGINX will start automatically, so no need for a CMD
+# Start the Angular app
+# ng serve --host 0.0.0.0 --poll=2000
+CMD [ "ng", "serve", "--host", "0.0.0.0", "--poll=2000" ]

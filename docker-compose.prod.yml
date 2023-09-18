@@ -2,10 +2,10 @@ version: '3.8'
 
 services:
 
-  sql-server:
+  sql-server-prod:
     user: root
     container_name: sql-server-2019-polytechnics-prod-1
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    image: mcr.microsoft.com/mssql/server:2019-CU22-ubuntu-20.04
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=${MSSQL_SA_PASSWORD}
@@ -16,12 +16,12 @@ services:
     volumes:
       - ${SQL_VOLUME_PATH}:/var/opt/mssql/data
     networks:
-      - polytechnics-network
+      - polytechnics-network-prod
 
-  web-api-polytechnics:
+  web-api-polytechnics-prod:
     build: 
       context: .
-      dockerfile: ./WebApiMdm/dockerfile
+      dockerfile: ./WebApiMdm/dockerfile.prod
     container_name: web-api-polytechnics-api-prod-1
     ports:
       - "5000:5000"
@@ -29,28 +29,29 @@ services:
     environment:
       - ASPNETCORE_HTTP_PORT=5000
       - ASPNETCORE_URLS=http://+:5000;https://+:5001
-      - ConnectionString=Data Source=sql-server;Initial Catalog=master;User Id=sa;Password=${MSSQL_SA_PASSWORD};
+      - ConnectionString=Data Source=sql-server-prod;Initial Catalog=master;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True
     depends_on:
-      - sql-server
+      - sql-server-prod
     networks:
-      - polytechnics-network
-    # stdin_open: true
-    # tty: true
+      - polytechnics-network-prod
+    stdin_open: true
+    tty: true
+    #command: ["bash"]
 
-  angular-ui:
+  angular-ui-prod:
     build:
       context: .
-      dockerfile: ./MvmNewUI/dockerfile
+      dockerfile: ./MvmNewUI/dockerfile.prod
     container_name: angular-polytechnics-prod-1
     ports:
       - "1080:80"
     depends_on:
-      - web-api-polytechnics
+      - web-api-polytechnics-prod
     networks:
-      - polytechnics-network
+      - polytechnics-network-prod
     # stdin_open: true
     # tty: true
 
 networks:
-  polytechnics-network:
+  polytechnics-network-prod:
     driver: bridge

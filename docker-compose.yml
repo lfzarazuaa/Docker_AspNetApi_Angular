@@ -5,7 +5,7 @@ services:
   sql-server:
     user: root
     container_name: sql-server-2019-polytechnics-dev-1
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    image: mcr.microsoft.com/mssql/server:2019-CU22-ubuntu-20.04
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=${MSSQL_SA_PASSWORD}
@@ -16,12 +16,12 @@ services:
     volumes:
       - ${SQL_VOLUME_PATH}:/var/opt/mssql/data
     networks:
-      - polytechnics-network
+      - polytechnics-network-dev
 
   web-api-polytechnics:
     build: 
       context: .
-      dockerfile: ./WebApiMdm/dockerfile.dev
+      dockerfile: ./WebApiMdm/dockerfile
     container_name: web-api-polytechnics-api-dev-1
     ports:
       - "5000:5000"
@@ -35,7 +35,7 @@ services:
     depends_on:
       - sql-server
     networks:
-      - polytechnics-network
+      - polytechnics-network-dev
     stdin_open: true
     tty: true
     #command: ["bash"]
@@ -43,7 +43,7 @@ services:
   angular-ui:
     build:
       context: .
-      dockerfile: ./MvmNewUI/dockerfile.dev
+      dockerfile: ./MvmNewUI/dockerfile
     container_name: angular-polytechnics-dev-1
     volumes:
       - ./MvmNewUI:/app/MvmNewUI
@@ -53,11 +53,11 @@ services:
     depends_on:
       - web-api-polytechnics
     networks:
-      - polytechnics-network
+      - polytechnics-network-dev
     stdin_open: true
     tty: true
     #command: ["bash"]
 
 networks:
-  polytechnics-network:
+  polytechnics-network-dev:
     driver: bridge

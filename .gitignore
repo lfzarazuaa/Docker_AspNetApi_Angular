@@ -1,0 +1,4 @@
+# Environment variables
+.env
+.dev.env
+.prod.env

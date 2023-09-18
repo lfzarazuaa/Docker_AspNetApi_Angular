@@ -24,7 +24,27 @@ The user interface (UI) is web-based and developed in Angular, connecting to the
 
 ## Running the Solution
 
-For the development mode, follow these steps:
+Before running the solution in either development or production mode, ensure you've set up your environment variables properly:
+
+1. Copy the ``.env.example`` to ``.env``:
+
+    ```bash
+    cp .env.example .env
+    ```
+
+2. If you are running the production mode, copy the ``.prod.env.example`` to ``.prod.env``:
+
+    ```bash
+    cp prod.env.example prod.env
+    ```
+
+3. Edit the ``.env`` and/or ``prod.env`` files to set the required environment variables. Ensure you follow the password rule for the database: "The password must be at least 8 characters long and contain characters from three of the following four sets: Uppercase letters, Lowercase letters, Base 10 digits, and Symbols."
+
+4. Make sure to set the appropriate path for the host system you want to bind with, using the proper format, either Unix style (/path/to/dir) or Windows style (C:\path\to\dir).
+
+### Development mode
+
+For the ``development mode``, follow these steps:
 
 1. Download the source code.
 2. Build all the images (required when adding new packages or changing the order in the Dockerfile).
@@ -33,19 +53,27 @@ For the development mode, follow these steps:
    docker-compose build --no-cache
     ```
 
-3. Run all the containers.
+3. Set the .env with the content of .dev.env (can be set only one time if not overriden).
+
+    ```bash
+    >> bash run_copy_env-dev.sh
+    ```
+
+4. Run all the containers.
 
     ```bash
     >> docker-compose up
     ```
 
-4. Connect using Visual Studio Code's Remote Container feature.
+5. Connect using Visual Studio Code's Remote Container feature.
 
-5. Stop the services via the Docker UI or execute the following command:
+6. Stop the services via the Docker UI or execute the following command:
 
     ```bash
     >> docker-compose down
     ```
+
+### Production mode
 
 For the ``production mode``, which is a lightweight version without dev tools:
 
@@ -56,15 +84,21 @@ For the ``production mode``, which is a lightweight version without dev tools:
     >> docker-compose -f docker-compose.prod.yml build --no-cache
     ```
 
-3. Run all the containers.
+3. Set the .env with the content of .prod.env (can be set only one time if not overriden).
+
+    ```bash
+    >> bash run_copy_env-prod.sh
+    ```
+
+4. Run all the containers.
 
     ```bash
     >> docker-compose -f docker-compose.prod.yml up
     ```
 
-4. Connect using Visual Studio Code's Remote Container feature.
+5. Connect using Visual Studio Code's Remote Container feature.
 
-5. Stop the services via the Docker UI or use the command:
+6. Stop the services via the Docker UI or use the command:
 
     ```bash
     >> docker-compose down
