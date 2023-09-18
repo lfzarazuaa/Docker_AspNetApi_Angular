@@ -38,7 +38,7 @@ services:
       - polytechnics-network-dev
     stdin_open: true
     tty: true
-    #command: ["bash"]
+    # command: ["bash"]
 
   angular-ui:
     build:

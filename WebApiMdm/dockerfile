@@ -2,40 +2,25 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 
 # Set the working directory in the container.
-WORKDIR /app
-
-# Copy the project file to the container. 
-# This is done first because this layer will be cached by Docker, allowing for faster rebuilds 
-# if the project file hasn't changed.
-COPY ./WebApiMdm/*.csproj ./WebApiMdm/
-
-# Restore the NuGet packages. This step is separated from copying the source files 
-# to leverage Docker layer caching and avoid unnecessary package restores.
 WORKDIR /app/WebApiMdm
-RUN dotnet restore
 
-# WORKDIR /app/WebApiMdm
-# # Check if the project directory and project file exist in the container.
-# RUN if [ ! -d WebApiMdm ] || [ ! -f WebApiMdm/WebApiMdm.csproj ]; then \
-#   echo "Creating a new project"; \
-#   dotnet new webapi -n WebApiMdm; \
-#   else \
-#   echo "Using existing project from local"; \
-#   fi
-
-# Copy the entire source code from the host to the container.
+# Copy the entire solution to the container.
 COPY ./WebApiMdm ./
+
+# Restore the NuGet packages at the solution level. 
+RUN dotnet restore WebApiMdm.sln
+
+# Build the application at the solution level.
+RUN dotnet build WebApiMdm.sln
 
 # Generate a development HTTPS certificate.
 RUN dotnet dev-certs https -ep /https/aspnetapp.pfx -p devPassword
 
-# Build the application.
-# RUN dotnet build
-
-# Expose ports.
+# Expose ports 5000(http) and 5001(https).
 EXPOSE 5000
 EXPOSE 5001
 
+WORKDIR /app/WebApiMdm/WebApiMdm
 # Define the entry point of the container.
 # dotnet run
 CMD ["dotnet", "run"]

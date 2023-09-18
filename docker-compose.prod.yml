@@ -34,9 +34,9 @@ services:
       - sql-server-prod
     networks:
       - polytechnics-network-prod
-    stdin_open: true
-    tty: true
-    #command: ["bash"]
+    # stdin_open: true
+    # tty: true
+    # command: ["bash"]
 
   angular-ui-prod:
     build:

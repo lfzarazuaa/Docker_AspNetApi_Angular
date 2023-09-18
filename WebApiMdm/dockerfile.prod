@@ -1,43 +1,30 @@
 # Build stage
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
-# Set the working directory in the container.
-WORKDIR /app
-
-# Copy the project file to the container. 
-# This is done first because this layer will be cached by Docker, allowing for faster rebuilds 
-# if the project file hasn't changed.
-COPY ./WebApiMdm/*.csproj ./WebApiMdm/
-
-# Restore the NuGet packages. This step is separated from copying the source files 
-# to leverage Docker layer caching and avoid unnecessary package restores.
 WORKDIR /app/WebApiMdm
-RUN dotnet restore
 
-# Copy the entire source code from the host to the container.
+# Copy the entire solution to the container.
 COPY ./WebApiMdm ./
 
-# Generate a development HTTPS certificate.
+# Restore the NuGet packages at the solution level.
+RUN dotnet restore WebApiMdm.sln
+
+# Publish the application for Release.
+RUN dotnet publish WebApiMdm.sln -c Release -o out
+
+# Generate HTTPS certificate.
 RUN dotnet dev-certs https -ep /https/aspnetapp.pfx -p prodPassword
-
-# Build the application.
-RUN dotnet build
-
-# Expose ports.
-EXPOSE 5000
-EXPOSE 5001
-
-RUN dotnet publish -c Release -o out
 
 # Production stage
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 
 WORKDIR /app
 
-COPY --from=build-env /app/WebApiMdm/out .
+# Copy the published app from the build stage.
+COPY --from=build /app/WebApiMdm/out .
 
-# Copy the HTTPS certificate
-COPY --from=build-env /https/aspnetapp.pfx /https/aspnetapp.pfx
+# Copy the HTTPS certificate.
+COPY --from=build /https/aspnetapp.pfx /https/
 
 # Set environment variables for production execution.
 ENV ASPNETCORE_URLS="https://+;http://+"
@@ -45,9 +32,9 @@ ENV ASPNETCORE_HTTPS_PORT=5001
 ENV ASPNETCORE_Kestrel__Certificates__Default__Password="prodPassword"
 ENV ASPNETCORE_Kestrel__Certificates__Default__Path="/https/aspnetapp.pfx"
 
-# Expose ports 5000 and 5001
+# Expose ports 5000(http) and 5001(https).
 EXPOSE 5000
 EXPOSE 5001
 
-# COMMAND
+# Set the command to run the app.
 CMD ["dotnet", "WebApiMdm.dll"]
