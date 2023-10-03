@@ -34,6 +34,9 @@ artifacts/
 # Visual Studio for Mac
 .vscode/
 
+# Visual Studio
+.vs/
+
 # Rider
 .idea/
 
@@ -48,6 +51,7 @@ ehthumbs.db
 
 # Others
 *.bak
+*.vsidx
 *.cache
 *.config
 *.swp

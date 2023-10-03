@@ -103,3 +103,97 @@ For the ``production mode``, which is a lightweight version without dev tools:
     ```bash
     >> docker-compose down
     ```
+
+## Restoring SQL Server Databases from `.bak` Files
+
+### Prerequisites
+
+1. Download the backup for AdventureWorks2019 (OLTP) from [this link](https://github.com/Microsoft/sql-server-samples/releases/tag/adventureworks) or directly access the `.bak` file [here](https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorks2019.bak).
+
+2. Ensure that the `.bak` file is placed in the directory specified by the `SQL_VOLUME_PATH` environment variable in your `.env`(prod or dev).
+
+### Steps to Restore AdventureWorks2019 Database
+
+1. **Start your containers**:
+
+    Navigate to the directory containing your `docker-compose.yml`:
+
+    ```bash
+    docker-compose up -d
+    ```
+
+2. **Create Required Files and Assign Permissions**:
+
+    Once the container is up and running, generate the necessary `.mdf` and `.ldf` files and assign permissions:
+
+    ```bash
+    docker exec -it your_sql_container_name bash -c "touch /var/opt/mssql/data/AdventureWorks2019.mdf && touch /var/opt/mssql/data/AdventureWorks2019_log.ldf"
+    docker exec -it your_sql_container_name bash -c "chmod 777 /var/opt/mssql/data/AdventureWorks2019.mdf"
+    docker exec -it your_sql_container_name bash -c "chmod 777 /var/opt/mssql/data/AdventureWorks2019_log.ldf"
+    docker exec -it your_sql_container_name bash -c "chmod 777 /var/opt/mssql/data/AdventureWorks2019.bak"
+    ```
+
+3. **Choose Your Restoration Method**:
+
+    a. Using a SQL Client (e.g., SSMS, Azure Data Studio):
+
+    Connect to the SQL Server instance within the Docker container and run the following SQL script:
+
+    ```sql
+    USE [master]
+    RESTORE DATABASE [AdventureWorks2019] FROM  DISK = N'/var/opt/mssql/data/AdventureWorks2019.bak' 
+    WITH  FILE = 1,  
+    MOVE N'AdventureWorks2019' TO N'/var/opt/mssql/data/AdventureWorks2019.mdf',  
+    MOVE N'AdventureWorks2019_log' TO N'/var/opt/mssql/data/AdventureWorks2019_log.ldf',  
+    NOUNLOAD,  REPLACE,  STATS = 5;
+    GO
+    ```
+
+    b. Using `sqlcmd` within the Docker Container:
+
+    Connect to the SQL Server container:
+
+    ```bash
+    docker exec -it your_sql_container_name /bin/bash
+    ```
+
+    Then, use `sqlcmd`:
+
+    ```bash
+    sqlcmd -S localhost -U SA -P '<YourPassword>' -Q "RESTORE DATABASE [AdventureWorks2019] FROM  DISK = N'/var/opt/mssql/data/AdventureWorks2019.bak' WITH  FILE = 1,  MOVE N'AdventureWorks2019' TO N'/var/opt/mssql/data/AdventureWorks2019.mdf',  MOVE N'AdventureWorks2019_log' TO N'/var/opt/mssql/data/AdventureWorks2019_log.ldf',  NOUNLOAD,  REPLACE,  STATS = 5;"
+    ```
+
+### Detailed Steps to Restore AdventureWorks2019Dev Database
+
+1. **Prepare the Files**:
+
+    Create the `.mdf` and `.ldf` files specific to the Dev version:
+
+    ```bash
+    docker exec -it your_sql_container_name bash -c "touch /var/opt/mssql/data/AdventureWorks2019Dev.mdf && touch /var/opt/mssql/data/AdventureWorks2019Dev_log.ldf"
+    ```
+
+2. **Assign Permissions**:
+
+    Grant permissions for these files:
+
+    ```bash
+    docker exec -it your_sql_container_name bash -c "chmod 777 /var/opt/mssql/data/AdventureWorks2019Dev.mdf"
+    docker exec -it your_sql_container_name bash -c "chmod 777 /var/opt/mssql/data/AdventureWorks2019Dev_log.ldf"
+    ```
+
+3. **Restore the Dev Version**:
+
+    Either through your SQL client or `sqlcmd`, execute:
+
+    ```sql
+    USE [master]
+    RESTORE DATABASE [AdventureWorks2019Dev] FROM  DISK = N'/var/opt/mssql/data/AdventureWorks2019.bak' 
+    WITH  FILE = 1,  
+    MOVE N'AdventureWorks2019' TO N'/var/opt/mssql/data/AdventureWorks2019Dev.mdf',  
+    MOVE N'AdventureWorks2019_log' TO N'/var/opt/mssql/data/AdventureWorks2019Dev_log.ldf',  
+    NOUNLOAD,  REPLACE,  STATS = 5;
+    GO
+    ```
+
+> **Tip**: When wanting to restore another `.bak` file or when uncertain of the logical names inside the backup, use the Restore Database feature in SSMS. This is an option for generating the restoration script instead of executing it directly to be certain of the names.

@@ -1,5 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Dapper;
+using WebApiMdm.Models.DbModels.AdventureWorks2019;
+using WebApiMdm.Models.Dtos.Response.AdventureWorks2019;
+using WebApiMdm.DataAccess.Connection;
 
 namespace WebApiMdm.Controllers;
 
@@ -7,6 +11,8 @@ namespace WebApiMdm.Controllers;
 [Route("[controller]")]
 public class WeatherForecastController : ControllerBase
 {
+    private readonly string _connectionString = ConnectionHelper.GetConnectionString("master");
+
     private static readonly string[] Summaries = new[]
     {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -61,7 +67,7 @@ public class WeatherForecastController : ControllerBase
     [HttpGet("test-sql-connection")]
     public IActionResult TestSqlConnection()
     {
-        string connectionString = Environment.GetEnvironmentVariable("ConnectionString") ?? "";
+        string connectionString = ConnectionHelper.GetConnectionString("master"); ;
         using (SqlConnection connection = new SqlConnection(connectionString))
         {
             try
@@ -85,5 +91,37 @@ public class WeatherForecastController : ControllerBase
         }
 
         return BadRequest("Unknown error occurred.");
+    }
+
+    [HttpGet("GetUnitMeasures")]
+    public ActionResult<IEnumerable<UnitMeasure>> GetUnitMeasures()
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            var unitMeasures = connection.Query<UnitMeasure>("SELECT * FROM [Production].[UnitMeasure]").AsList();
+            return Ok(unitMeasures);
+        }
+    }
+
+    [HttpGet("GetUnitMeasureDTOs")]
+    public ActionResult<IEnumerable<UnitMeasureDTO>> GetUnitMeasureDTOs()
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            var unitMeasures = connection.Query<UnitMeasure>("SELECT * FROM [Production].[UnitMeasure]").AsList();
+
+            List<UnitMeasureDTO> unitMeasureDTOs = new List<UnitMeasureDTO>();
+            foreach (var measure in unitMeasures)
+            {
+                unitMeasureDTOs.Add(new UnitMeasureDTO
+                {
+                    UnitMeasureCode = measure.UnitMeasureCode,
+                    Name = measure.Name,
+                    ModifiedDate = measure.ModifiedDate,
+                    RandomData = Guid.NewGuid().ToString()
+                });
+            }
+            return Ok(unitMeasureDTOs);
+        }
     }
 }
