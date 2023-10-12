@@ -1,18 +1,15 @@
 ﻿using System.Data;
 using Dapper;
-using WebApiMdm.DataAccess.Interfaces;
-using WebApiMdm.DataAccess.Services;
 using WebApiMdm.DataAccess.Services.Interfaces;
 using WebApiMdm.Models.DbModels.AdventureWorks2019.Production;
 using WebApiMdm.Models.Dtos.Request.AdventureWorks2019.Product;
-using WebApiMdm.Utils.Directory;
 
 namespace WebApiMdm.DataAccess.Repositories.AdventureWorks2019.Production.ProductModelDataAccessor;
 
 public class ProductModelRepository : Repository, IProductModelRepository
 {
 
-    public ProductModelRepository(IDbConnection connection, IAdventureWorks2019SqlQueryService sqlQueryService) : base(connection, sqlQueryService, "ProductModelDataAccessor", "ProductModelQueries.sql")
+    public ProductModelRepository(IDbConnection connection, IAdventureWorks2019SqlQueryService sqlQueryService) : base(connection, sqlQueryService, "Production", "ProductModelDataAccessor", "ProductModelQueries.sql")
     {
     }
 

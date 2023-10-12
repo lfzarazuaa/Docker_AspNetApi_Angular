@@ -7,6 +7,13 @@ using WebApiMdm.DataAccess.Services;
 using WebApiMdm.DataAccess.UnitOfWork;
 using WebApiMdm.Services.AdventureWorks2019.Production;
 using WebApiMdm.Services.AdventureWorks2019.Production.Interfaces;
+using WebApiMdm.DataAccess.Connection.AssetsManagement;
+using WebApiMdm.DataAccess.Connection.CommercialBanking;
+using WebApiMdm.DataAccess.Connection.InsurancesServices;
+using WebApiMdm.DataAccess.Connection.MdmMaster;
+using WebApiMdm.DataAccess.Connection.RetailBanking;
+using WebApiMdm.Services;
+using WebApiMdm.Services.MdmMaster;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +45,60 @@ builder.Services.AddTransient<AdventureWorks2019UnitOfWork>(sp =>
     }, new AdventureWorks2019SqlQueryService()
     ));
 
+
+
+// Configure Connection string for AssetsManagement
+string assetsManagementConnectionString = ConnectionHelper.GetConnectionString("AssetsManagement");
+builder.Services.AddTransient<IAssetsManagementSqlQueryService, AssetsManagementSqlQueryService>();
+builder.Services.AddTransient<AssetsManagementUnitOfWork>(sp =>
+    new AssetsManagementUnitOfWork(new AssetsManagementDbConfig
+    {
+        ConnectionString = assetsManagementConnectionString
+    }, new AssetsManagementSqlQueryService()
+    ));
+
+// Configure Connection string for CommercialBanking
+string commercialBankingConnectionString = ConnectionHelper.GetConnectionString("CommercialBanking");
+builder.Services.AddTransient<ICommercialBankingSqlQueryService, CommercialBankingSqlQueryService>();
+builder.Services.AddTransient<CommercialBankingUnitOfWork>(sp =>
+    new CommercialBankingUnitOfWork(new CommercialBankingDbConfig
+    {
+        ConnectionString = commercialBankingConnectionString
+    }, new CommercialBankingSqlQueryService()
+    ));
+
+// Configure Connection string for InsurancesServices
+string insurancesServicesConnectionString = ConnectionHelper.GetConnectionString("InsurancesServices");
+builder.Services.AddTransient<IInsurancesServicesSqlQueryService, InsurancesServicesSqlQueryService>();
+builder.Services.AddTransient<InsurancesServicesUnitOfWork>(sp =>
+    new InsurancesServicesUnitOfWork(new InsurancesServicesDbConfig
+    {
+        ConnectionString = insurancesServicesConnectionString
+    }, new InsurancesServicesSqlQueryService()
+    ));
+
+// Configure Connection string for MdmMaster
+string mdmMasterConnectionString = ConnectionHelper.GetConnectionString("MdmMaster");
+builder.Services.AddTransient<IMdmMasterSqlQueryService, MdmMasterSqlQueryService>();
+builder.Services.AddTransient<MdmMasterUnitOfWork>(sp =>
+    new MdmMasterUnitOfWork(new MdmMasterDbConfig
+    {
+        ConnectionString = mdmMasterConnectionString
+    }, new MdmMasterSqlQueryService()
+    ));
+
+// Configure Connection string for RetailBanking
+string retailBankingConnectionString = ConnectionHelper.GetConnectionString("RetailBanking");
+builder.Services.AddTransient<IRetailBankingSqlQueryService, RetailBankingSqlQueryService>();
+builder.Services.AddTransient<RetailBankingUnitOfWork>(sp =>
+    new RetailBankingUnitOfWork(new RetailBankingDbConfig
+    {
+        ConnectionString = retailBankingConnectionString
+    }, new RetailBankingSqlQueryService()
+    ));
+
+builder.Services.AddTransient<ICustomerDataOrchestrationService, CustomerDataOrchestrationService>();
+builder.Services.AddTransient<ITestDbConnectionService, TestDbConnectionService>();
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IProductModelService, ProductModelService>();
 
