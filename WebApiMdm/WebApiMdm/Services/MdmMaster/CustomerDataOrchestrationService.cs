@@ -202,7 +202,7 @@ public class CustomerDataOrchestrationService : ICustomerDataOrchestrationServic
             },
             new StagingCustomerDto
             {
-                OriginalDB = "InsurancesServices",
+                OriginalDB = "CommercialBanking",
                 OriginalDBID = "5",
                 Username = "rjuare",
                 FirstName = "Roberto",
@@ -357,7 +357,7 @@ public class CustomerDataOrchestrationService : ICustomerDataOrchestrationServic
             new StagingCustomerDto
             {
                 Guid = "DD6289A9-22FE-48BE-AEE8-7C2371F71FA3",
-                OriginalDB = "InsurancesServices",
+                OriginalDB = "CommercialBanking",
                 OriginalDBID = "5",
                 Username = "rjuare",
                 FirstName = "Roberto",
