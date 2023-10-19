@@ -9,7 +9,7 @@ using WebApiMdm.Services.AdventureWorks2019.Production;
 using WebApiMdm.Services.AdventureWorks2019.Production.Interfaces;
 using WebApiMdm.DataAccess.Connection.AssetsManagement;
 using WebApiMdm.DataAccess.Connection.CommercialBanking;
-using WebApiMdm.DataAccess.Connection.InsurancesServices;
+using WebApiMdm.DataAccess.Connection.InsuranceServices;
 using WebApiMdm.DataAccess.Connection.MdmMaster;
 using WebApiMdm.DataAccess.Connection.RetailBanking;
 using WebApiMdm.Services;
@@ -67,14 +67,14 @@ builder.Services.AddTransient<CommercialBankingUnitOfWork>(sp =>
     }, new CommercialBankingSqlQueryService()
     ));
 
-// Configure Connection string for InsurancesServices
-string insurancesServicesConnectionString = ConnectionHelper.GetConnectionString("InsurancesServices");
-builder.Services.AddTransient<IInsurancesServicesSqlQueryService, InsurancesServicesSqlQueryService>();
-builder.Services.AddTransient<InsurancesServicesUnitOfWork>(sp =>
-    new InsurancesServicesUnitOfWork(new InsurancesServicesDbConfig
+// Configure Connection string for InsuranceServices
+string InsuranceServicesConnectionString = ConnectionHelper.GetConnectionString("InsuranceServices");
+builder.Services.AddTransient<IInsuranceServicesSqlQueryService, InsuranceServicesSqlQueryService>();
+builder.Services.AddTransient<InsuranceServicesUnitOfWork>(sp =>
+    new InsuranceServicesUnitOfWork(new InsuranceServicesDbConfig
     {
-        ConnectionString = insurancesServicesConnectionString
-    }, new InsurancesServicesSqlQueryService()
+        ConnectionString = InsuranceServicesConnectionString
+    }, new InsuranceServicesSqlQueryService()
     ));
 
 // Configure Connection string for MdmMaster
@@ -109,9 +109,9 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    
+
     // Redirect root to Swagger UI
-    app.Use(async (context, next) => 
+    app.Use(async (context, next) =>
     {
         if (context.Request.Path.Value == "/")
         {
@@ -124,7 +124,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors(builder => 
+app.UseCors(builder =>
 {
     builder.AllowAnyOrigin()
            .AllowAnyMethod()

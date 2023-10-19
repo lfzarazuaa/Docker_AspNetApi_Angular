@@ -1,4 +1,4 @@
-"-- ##### InsurancesServices Utils Queries #####
+-- ##### InsuranceServices Utils Queries #####
 
 -- ##### Begin Declare Variables #####
 DECLARE @Name NVARCHAR(50);
@@ -24,4 +24,3 @@ WHERE
 ORDER BY 
     t.TABLE_NAME, c.ORDINAL_POSITION;
 -- ##### End Query #####
-"

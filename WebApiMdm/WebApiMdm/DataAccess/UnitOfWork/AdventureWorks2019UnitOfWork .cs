@@ -10,7 +10,7 @@ public class AdventureWorks2019UnitOfWork : UnitOfWork
 {
     private readonly IAdventureWorks2019SqlQueryService _adventureWorks2019SqlQueryService;
     
-    public AdventureWorks2019UnitOfWork(AdventureWorks2019DbConfig config, IAdventureWorks2019SqlQueryService sqlQueryService) : base(config.ConnectionString??"")
+    public AdventureWorks2019UnitOfWork(AdventureWorks2019DbConfig config, IAdventureWorks2019SqlQueryService sqlQueryService) : base(config.ConnectionString??string.Empty)
     {
         _adventureWorks2019SqlQueryService = sqlQueryService;
     }

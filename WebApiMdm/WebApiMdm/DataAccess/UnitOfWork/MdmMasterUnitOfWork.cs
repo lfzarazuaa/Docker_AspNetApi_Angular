@@ -1,4 +1,5 @@
 using WebApiMdm.DataAccess.Connection.MdmMaster;
+using WebApiMdm.DataAccess.Repositories.MdmMaster.CustomerDataAccessor;
 using WebApiMdm.DataAccess.Repositories.MdmMaster.UtilsDataAccessor;
 using WebApiMdm.DataAccess.Services.Interfaces;
 
@@ -8,12 +9,12 @@ public class MdmMasterUnitOfWork : UnitOfWork
 {
     private readonly IMdmMasterSqlQueryService _mdmmasterSqlQueryService;
     
-    public MdmMasterUnitOfWork(MdmMasterDbConfig config, IMdmMasterSqlQueryService sqlQueryService) : base(config.ConnectionString??"")
+    public MdmMasterUnitOfWork(MdmMasterDbConfig config, IMdmMasterSqlQueryService sqlQueryService) : base(config.ConnectionString?? string.Empty)
 
     {
         _mdmmasterSqlQueryService = sqlQueryService;
     }
 
     public IUtilsRepository UtilsRepository => new UtilsRepository(Connection, _mdmmasterSqlQueryService);
-    //public ICustomerRepository CustomerRepository => new CustomerRepository(Connection, _mdmmasterSqlQueryService);
+    public ICustomerRepository CustomerRepository => new CustomerRepository(Connection, _mdmmasterSqlQueryService);
 }

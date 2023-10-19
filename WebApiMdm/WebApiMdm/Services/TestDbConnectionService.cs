@@ -7,7 +7,7 @@ public class TestDbConnectionService : ITestDbConnectionService
     private readonly AdventureWorks2019UnitOfWork _adventureWorks2019unitOfWork;
     private readonly AssetsManagementUnitOfWork _assetsManagementUnitOfWork;
     private readonly CommercialBankingUnitOfWork _commercialBankingUnitOfWork;
-    private readonly InsurancesServicesUnitOfWork _insurancesServicesUnitOfWork;
+    private readonly InsuranceServicesUnitOfWork _InsuranceServicesUnitOfWork;
     private readonly MdmMasterUnitOfWork _mdmMasterUnitOfWork;
     private readonly RetailBankingUnitOfWork _retailBankingUnitOfWork;
 
@@ -15,7 +15,7 @@ public class TestDbConnectionService : ITestDbConnectionService
         AdventureWorks2019UnitOfWork adventureWorks2019unitOfWork,
         AssetsManagementUnitOfWork assetsManagementUnitOfWork,
         CommercialBankingUnitOfWork commercialBankingUnitOfWork,
-        InsurancesServicesUnitOfWork insurancesServicesUnitOfWork,
+        InsuranceServicesUnitOfWork InsuranceServicesUnitOfWork,
         MdmMasterUnitOfWork mdmMasterUnitOfWork,
         RetailBankingUnitOfWork retailBankingUnitOfWork
     )
@@ -23,7 +23,7 @@ public class TestDbConnectionService : ITestDbConnectionService
         _adventureWorks2019unitOfWork = adventureWorks2019unitOfWork;
         _assetsManagementUnitOfWork = assetsManagementUnitOfWork;
         _commercialBankingUnitOfWork = commercialBankingUnitOfWork;
-        _insurancesServicesUnitOfWork = insurancesServicesUnitOfWork;
+        _InsuranceServicesUnitOfWork = InsuranceServicesUnitOfWork;
         _mdmMasterUnitOfWork = mdmMasterUnitOfWork;
         _retailBankingUnitOfWork = retailBankingUnitOfWork;
     }
@@ -58,14 +58,14 @@ public class TestDbConnectionService : ITestDbConnectionService
         return _commercialBankingUnitOfWork.UtilsRepository.GetDatabaseTables();
     }
 
-    public string GetInsurancesServicesDbVersion()
+    public string GetInsuranceServicesDbVersion()
     {
-        return _insurancesServicesUnitOfWork.UtilsRepository.GetDatabaseVersion();
+        return _InsuranceServicesUnitOfWork.UtilsRepository.GetDatabaseVersion();
     }
 
-    public IEnumerable<DatabaseTableDetailsResponse> GetInsurancesServicesDbTablesDetails()
+    public IEnumerable<DatabaseTableDetailsResponse> GetInsuranceServicesDbTablesDetails()
     {
-        return _insurancesServicesUnitOfWork.UtilsRepository.GetDatabaseTables();
+        return _InsuranceServicesUnitOfWork.UtilsRepository.GetDatabaseTables();
     }
 
     public string GetMdmMasterDbVersion()

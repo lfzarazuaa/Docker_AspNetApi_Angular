@@ -11,7 +11,7 @@ public static class DirectoryPath
     public static readonly string AdventureWorks2019ProductionDirectory = Path.Combine(AdventureWorks2019DataAccessDirectory, "Production");
     public static readonly string AssetsManagementDataAccessDirectory = Path.Combine(SolutionDirectory, "DataAccess", "Repositories", "AssetsManagement");
     public static readonly string CommercialBankingDataAccessDirectory = Path.Combine(SolutionDirectory, "DataAccess", "Repositories", "CommercialBanking");
-    public static readonly string InsurancesServicesDataAccessDirectory = Path.Combine(SolutionDirectory, "DataAccess", "Repositories", "InsurancesServices");
+    public static readonly string InsuranceServicesDataAccessDirectory = Path.Combine(SolutionDirectory, "DataAccess", "Repositories", "InsuranceServices");
     public static readonly string MdmMasterDataAccessDirectory = Path.Combine(SolutionDirectory, "DataAccess", "Repositories", "MdmMaster");
     public static readonly string RetailBankingDataAccessDirectory = Path.Combine(SolutionDirectory, "DataAccess", "Repositories", "RetailBanking");
 

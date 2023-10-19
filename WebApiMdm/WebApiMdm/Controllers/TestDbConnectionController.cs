@@ -56,18 +56,18 @@ public class TestDbConnectionController : ControllerBase
         return Ok(_testDbConnectionService.GetCommercialBankingDbTablesDetails());
     }
 
-    // GET: api/TestDbConnection/InsurancesServices/DbVersion
-    [HttpGet(@"InsurancesServices/DbVersion")]
-    public ActionResult<string> GetInsurancesServicesDbVersion()
+    // GET: api/TestDbConnection/InsuranceServices/DbVersion
+    [HttpGet(@"InsuranceServices/DbVersion")]
+    public ActionResult<string> GetInsuranceServicesDbVersion()
     {
-        return Ok(_testDbConnectionService.GetInsurancesServicesDbVersion());
+        return Ok(_testDbConnectionService.GetInsuranceServicesDbVersion());
     }
 
-    // GET: api/TestDbConnection/InsurancesServices/DbTablesDetails
-    [HttpGet(@"InsurancesServices/DbTablesDetails")]
-    public ActionResult<IEnumerable<DatabaseTableDetailsResponse>> GetInsurancesServicesDbTablesDetails()
+    // GET: api/TestDbConnection/InsuranceServices/DbTablesDetails
+    [HttpGet(@"InsuranceServices/DbTablesDetails")]
+    public ActionResult<IEnumerable<DatabaseTableDetailsResponse>> GetInsuranceServicesDbTablesDetails()
     {
-        return Ok(_testDbConnectionService.GetInsurancesServicesDbTablesDetails());
+        return Ok(_testDbConnectionService.GetInsuranceServicesDbTablesDetails());
     }
 
     // GET: api/TestDbConnection/MdmMaster/DbVersion

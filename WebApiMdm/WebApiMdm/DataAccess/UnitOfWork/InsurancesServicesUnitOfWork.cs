@@ -1,20 +1,23 @@
-using WebApiMdm.DataAccess.Connection.InsurancesServices;
-using WebApiMdm.DataAccess.Repositories.InsurancesServices.UtilsDataAccessor;
-using WebApiMdm.DataAccess.Services;
+using WebApiMdm.DataAccess.Connection.InsuranceServices;
+using WebApiMdm.DataAccess.Repositories.InsuranceServices.CustomerDataAccessor;
+using WebApiMdm.DataAccess.Repositories.InsuranceServices.UtilsDataAccessor;
+using WebApiMdm.DataAccess.Repositories.Interfaces;
 using WebApiMdm.DataAccess.Services.Interfaces;
+using WebApiMdm.DataAccess.UnitOfWork.Interfaces;
 
 namespace WebApiMdm.DataAccess.UnitOfWork;
 
-public class InsurancesServicesUnitOfWork : UnitOfWork
+public class InsuranceServicesUnitOfWork : UnitOfWork, ICustomerUnitOfWork
 {
-    private readonly IInsurancesServicesSqlQueryService _insurancesservicesSqlQueryService;
-    
-    public InsurancesServicesUnitOfWork(InsurancesServicesDbConfig config, IInsurancesServicesSqlQueryService sqlQueryService) : base(config.ConnectionString??"")
+    private readonly IInsuranceServicesSqlQueryService _InsuranceServicesSqlQueryService;
+
+    public InsuranceServicesUnitOfWork(InsuranceServicesDbConfig config, IInsuranceServicesSqlQueryService sqlQueryService) : base(config.ConnectionString ?? string.Empty)
 
     {
-        _insurancesservicesSqlQueryService = sqlQueryService;
+        _InsuranceServicesSqlQueryService = sqlQueryService;
     }
 
-    public IUtilsRepository UtilsRepository => new UtilsRepository(Connection, _insurancesservicesSqlQueryService);
-    //public ICustomerRepository CustomerRepository => new CustomerRepository(Connection, _insurancesservicesSqlQueryService);
+    public IUtilsRepository UtilsRepository => new UtilsRepository(Connection, _InsuranceServicesSqlQueryService);
+    public ICustomerRepository CustomerRepository => new CustomerRepository(Connection, _InsuranceServicesSqlQueryService);
+    IMdmCopyCustomerRepository ICustomerUnitOfWork.CustomerRepository => CustomerRepository;
 }

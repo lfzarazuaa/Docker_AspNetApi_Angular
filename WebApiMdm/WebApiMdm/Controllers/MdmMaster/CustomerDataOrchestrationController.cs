@@ -32,6 +32,16 @@ public class CustomerDataOrchestrationController : ControllerBase
         return Ok(data);
     }
 
+    [HttpDelete("delete/copied/customers")]
+    public ActionResult DeleteAllCopiedCustomers()
+    {
+        bool isDeleted = _service.DeleteAllCopiedCustomers();
+        if (isDeleted)
+            return Ok("Copied customers deleted successfully.");
+        else
+            return BadRequest("Failed to delete copied customers.");
+    }
+
     [HttpPost("confirm/staging")]
     public ActionResult ConfirmStaging()
     {
@@ -46,6 +56,23 @@ public class CustomerDataOrchestrationController : ControllerBase
     public ActionResult<IEnumerable<StagingCustomerDto>> GetStagedCustomers()
     {
         var data = _service.GetStagedCustomers();
+        return Ok(data);
+    }
+
+    [HttpDelete("delete/staging/customers")]
+    public ActionResult DeleteAllStagingCustomers()
+    {
+        bool isDeleted = _service.DeleteAllStagingCustomers();
+        if (isDeleted)
+            return Ok("Staging customers deleted successfully.");
+        else
+            return BadRequest("Failed to delete staging customers.");
+    }
+
+    [HttpGet("staging/grouped/customers")]
+    public ActionResult<IEnumerable<GroupedCustomerDto>> GetGroupedStagedCustomers()
+    {
+        var data = _service.GetGroupedStagedCustomers();
         return Ok(data);
     }
 
@@ -65,5 +92,23 @@ public class CustomerDataOrchestrationController : ControllerBase
         var data = _service.GetFinalizedCustomers();
         return Ok(data);
     }
+
+    [HttpDelete("delete/finalized/customers")]
+    public ActionResult DeleteAllFinalCustomers()
+    {
+        bool isDeleted = _service.DeleteAllFinalCustomers();
+        if (isDeleted)
+            return Ok("Finalized customers deleted successfully.");
+        else
+            return BadRequest("Failed to delete finalized customers.");
+    }
+
+    [HttpGet("finalized/grouped/customers")]
+    public ActionResult<IEnumerable<GroupedCustomerDto>> GetGroupedFinalCustomers()
+    {
+        var data = _service.GetGroupedFinalCustomers();
+        return Ok(data);
+    }
+
 }
 

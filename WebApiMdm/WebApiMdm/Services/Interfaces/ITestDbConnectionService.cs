@@ -12,8 +12,8 @@ public interface ITestDbConnectionService
     IEnumerable<DatabaseTableDetailsResponse> GetCommercialBankingDbTablesDetails();
     string GetCommercialBankingDbVersion();
 
-    IEnumerable<DatabaseTableDetailsResponse> GetInsurancesServicesDbTablesDetails();
-    string GetInsurancesServicesDbVersion();
+    IEnumerable<DatabaseTableDetailsResponse> GetInsuranceServicesDbTablesDetails();
+    string GetInsuranceServicesDbVersion();
 
     IEnumerable<DatabaseTableDetailsResponse> GetMdmMasterDbTablesDetails();
     string GetMdmMasterDbVersion();

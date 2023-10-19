@@ -3,10 +3,10 @@ using System.Data;
 using WebApiMdm.DataAccess.Services.Interfaces;
 using WebApiMdm.Models.Dtos.Response.Utils;
 
-namespace WebApiMdm.DataAccess.Repositories.InsurancesServices.UtilsDataAccessor;
+namespace WebApiMdm.DataAccess.Repositories.InsuranceServices.UtilsDataAccessor;
 public class UtilsRepository : Repository, IUtilsRepository
 {
-    public UtilsRepository(IDbConnection connection, IInsurancesServicesSqlQueryService sqlQueryService) : base(connection, sqlQueryService, "UtilsDataAccessor", "UtilsQueries.sql")
+    public UtilsRepository(IDbConnection connection, IInsuranceServicesSqlQueryService sqlQueryService) : base(connection, sqlQueryService, "UtilsDataAccessor", "UtilsQueries.sql")
     {
     }
 

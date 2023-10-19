@@ -1,6 +1,6 @@
-namespace WebApiMdm.DataAccess.Connection.InsurancesServices
+namespace WebApiMdm.DataAccess.Connection.InsuranceServices
 {
-    public class InsurancesServicesDbConfig
+    public class InsuranceServicesDbConfig
     {
         public string? ConnectionString { get; set; }
     }
