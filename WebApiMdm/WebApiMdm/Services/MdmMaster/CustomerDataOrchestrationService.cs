@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using WebApiMdm.DataAccess.Repositories.Interfaces;
-using WebApiMdm.DataAccess.Repositories.RetailBanking.CustomerDataAccessor;
+﻿using Serilog;
 using WebApiMdm.DataAccess.UnitOfWork;
 using WebApiMdm.DataAccess.UnitOfWork.Interfaces;
 using WebApiMdm.Models.Dtos.Request.MdmMaster;
@@ -159,17 +157,17 @@ public class CustomerDataOrchestrationService : ICustomerDataOrchestrationServic
     public HttpResult<CustomerDetailsDto> GetCustomerDetails(SearchCustomerDto request)
     {
         var builder = new HttpResult<CustomerDetailsDto>.Builder();
-        try
-        {
-            if (request == null)
+        //try
+        //{
+            if (request == null || (request != null && (request.Guid==null) && (request.Username == null) && (request.Email == null)))
             {
-                return builder.Failure("Invalid params", StatusCodes.Status400BadRequest).Build();
+                return builder.Failure("Invalid parameters", StatusCodes.Status400BadRequest).Build();
             }
 
             var tuples = _mdmMasterUnitOfWork.CustomerRepository.GetGuidRowsFromCriteria(request);
 
             if (tuples == null || !tuples.Any())
-                return builder.Failure("No data found for the given criteria", 404).Build();
+                return builder.Failure("No data found for the given criteria", StatusCodes.Status404NotFound).Build();
 
             var customerDetails = new CustomerDetailsDto();
             foreach (var tuple in tuples)
@@ -197,12 +195,13 @@ public class CustomerDataOrchestrationService : ICustomerDataOrchestrationServic
                 }
             }
             return builder.Success(customerDetails).Build();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.ToString());
-            return builder.Failure("Internal Server Error", 505).Build();
-        }
+        //}
+        //catch (Exception ex)
+        //{
+        //    Log.Error(ex.Message+ex.StackTrace??"");
+        //    Console.WriteLine(ex.ToString());
+        //    return builder.Failure("Internal Server Error", 505).Build();
+        //}
     }
 }
 

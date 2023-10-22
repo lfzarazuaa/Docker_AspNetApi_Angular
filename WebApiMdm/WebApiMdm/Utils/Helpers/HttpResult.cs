@@ -17,7 +17,7 @@ public class HttpResult<T>
         if (IsSuccess)
             return new ObjectResult(Data) { StatusCode = StatusCode};
         else
-            return new ObjectResult(new { Message }) { StatusCode = StatusCode };
+            return new ObjectResult(new { Message, StatusCode }) { StatusCode = StatusCode };
     }
 
     public class Builder

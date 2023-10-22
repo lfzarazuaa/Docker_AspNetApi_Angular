@@ -5,7 +5,7 @@ DECLARE @Name NVARCHAR(50), @Id INT;
 -- ##### End Declare Variables #####
 
 -- ##### Begin Query: GetCustomers #####
-SELECT CustomerId
+SELECT CustomerId,
        Username,
        Email,
        FirstName,
@@ -17,7 +17,7 @@ SELECT CustomerId
 -- ##### End Query #####
 
 -- ##### Begin Query: GetCustomerData #####
-SELECT TOP 1 CustomerId
+SELECT TOP 1 CustomerId,
        Username,
        Email,
        FirstName,

@@ -15,7 +15,7 @@ public class CustomerRepository : Repository, ICustomerRepository
     public IEnumerable<CommercialBankingCustomer> GetCustomers()
     {
         string query = _queries["GetCustomers"];
-        return _connection.Query< CommercialBankingCustomer>(query);
+        return _connection.Query<CommercialBankingCustomer>(query);
     }
 
     public CommercialBankingCustomer GetCustomerData(int id)

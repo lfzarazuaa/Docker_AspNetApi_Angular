@@ -14,6 +14,14 @@ using WebApiMdm.DataAccess.Connection.MdmMaster;
 using WebApiMdm.DataAccess.Connection.RetailBanking;
 using WebApiMdm.Services;
 using WebApiMdm.Services.MdmMaster;
+using Serilog;
+using WebApiMdm.Utils.Helpers;
+
+// Setup Serilog configuration
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.File("logs/WebApiMdm.log",
+     rollingInterval: RollingInterval.Day)
+    .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,8 +52,6 @@ builder.Services.AddTransient<AdventureWorks2019UnitOfWork>(sp =>
         ConnectionString = adventureWorks2019ConnectionString
     }, new AdventureWorks2019SqlQueryService()
     ));
-
-
 
 // Configure Connection string for AssetsManagement
 string assetsManagementConnectionString = ConnectionHelper.GetConnectionString("AssetsManagement");
@@ -104,6 +110,8 @@ builder.Services.AddTransient<IProductModelService, ProductModelService>();
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionMiddleware>();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -136,3 +144,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+Log.CloseAndFlush();
