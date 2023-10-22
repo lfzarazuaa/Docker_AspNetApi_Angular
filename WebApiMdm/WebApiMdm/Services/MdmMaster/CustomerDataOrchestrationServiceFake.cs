@@ -2,6 +2,7 @@
 using WebApiMdm.Models.Dtos.Request.MdmMaster;
 using WebApiMdm.Models.Dtos.Response.MdmMaster;
 using WebApiMdm.Utils.Extensions;
+using WebApiMdm.Utils.Helpers;
 
 namespace WebApiMdm.Services.MdmMaster;
 
@@ -451,6 +452,11 @@ public class CustomerDataOrchestrationServiceFake : ICustomerDataOrchestrationSe
     }
 
     public IEnumerable<GroupedCustomerDto> GetGroupedFinalCustomers()
+    {
+        throw new NotImplementedException();
+    }
+
+    public HttpResult<CustomerDetailsDto> GetCustomerDetails(SearchCustomerDto request)
     {
         throw new NotImplementedException();
     }

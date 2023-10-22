@@ -6,6 +6,7 @@ using WebApiMdm.DataAccess.UnitOfWork.Interfaces;
 using WebApiMdm.Models.Dtos.Request.MdmMaster;
 using WebApiMdm.Models.Dtos.Response.MdmMaster;
 using WebApiMdm.Utils.Extensions;
+using WebApiMdm.Utils.Helpers;
 
 namespace WebApiMdm.Services.MdmMaster;
 public class CustomerDataOrchestrationService : ICustomerDataOrchestrationService
@@ -153,6 +154,55 @@ public class CustomerDataOrchestrationService : ICustomerDataOrchestrationServic
     public IEnumerable<GroupedCustomerDto> GetGroupedFinalCustomers()
     {
         return _mdmMasterUnitOfWork.CustomerRepository.GetGroupedFinalCustomers();
+    }
+
+    public HttpResult<CustomerDetailsDto> GetCustomerDetails(SearchCustomerDto request)
+    {
+        var builder = new HttpResult<CustomerDetailsDto>.Builder();
+        try
+        {
+            if (request == null)
+            {
+                return builder.Failure("Invalid params", StatusCodes.Status400BadRequest).Build();
+            }
+
+            var tuples = _mdmMasterUnitOfWork.CustomerRepository.GetGuidRowsFromCriteria(request);
+
+            if (tuples == null || !tuples.Any())
+                return builder.Failure("No data found for the given criteria", 404).Build();
+
+            var customerDetails = new CustomerDetailsDto();
+            foreach (var tuple in tuples)
+            {
+                switch (tuple.OriginalDb)
+                {
+                    case "AssetsManagement":
+                        customerDetails.AssetsManagement =
+                            _assetsManagementUnitOfWork.CustomerRepository.GetCustomerData(tuple.OriginalDbId);
+                        break;
+                    case "CommercialBanking":
+                        customerDetails.CommercialBanking =
+                            _commercialBankingUnitOfWork.CustomerRepository.GetCustomerData(tuple.OriginalDbId);
+                        break;
+                    case "InsuranceServices":
+                        customerDetails.InsuranceServices =
+                            _insuranceServicesUnitOfWork.CustomerRepository.GetCustomerData(tuple.OriginalDbId);
+                        break;
+                    case "RetailBanking":
+                        customerDetails.RetailBanking =
+                            _retailBankingUnitOfWork.CustomerRepository.GetCustomerData(tuple.OriginalDbId);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return builder.Success(customerDetails).Build();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+            return builder.Failure("Internal Server Error", 505).Build();
+        }
     }
 }
 

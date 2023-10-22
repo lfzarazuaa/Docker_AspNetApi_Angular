@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using Azure.Core;
+using Dapper;
 using System.Data;
 using System.Data.Common;
 using WebApiMdm.DataAccess.Services.Interfaces;
@@ -186,6 +187,12 @@ public class CustomerRepository : Repository, ICustomerRepository
     {
         string query = _queries["GetGroupedFinalCustomers"];
         return _connection.Query<GroupedCustomerDto>(query);
+    }
+
+    public IEnumerable<(string Guid, string OriginalDb, int OriginalDbId)> GetGuidRowsFromCriteria(SearchCustomerDto request)
+    {
+        string query = _queries["GetGuidRowsFromCriteria"];
+        return _connection.Query<(string, string, int)>(query, request).ToList();
     }
 }
 

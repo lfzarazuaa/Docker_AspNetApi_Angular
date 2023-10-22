@@ -1,19 +1,32 @@
 -- ##### Customer Queries #####
 
 -- ##### Begin Declare Variables #####
-DECLARE @Name NVARCHAR(50);
+DECLARE @Name NVARCHAR(50), @Id INT;
 -- ##### End Declare Variables #####
 
 -- ##### Begin Query: GetCustomers #####
-SELECT CustomerId,
-       Username,
-       Email,
-       FirstName,
-       LastName,
-       Birthdate,
-       CURP,
-       Passport
-  FROM dbo.Customers
+SELECT CustomerId
+      ,Username
+      ,Email
+      ,FirstName
+      ,LastName
+      ,Birthdate
+      ,CURP
+      ,Passport
+  FROM [dbo].[Customers]
+-- ##### End Query #####
+
+-- ##### Begin Query: GetCustomerData #####
+SELECT CustomerId
+      ,Username
+      ,Email
+      ,FirstName
+      ,LastName
+      ,Birthdate
+      ,CURP
+      ,Passport
+  FROM [dbo].[Customers]
+  WHERE CustomerId=@Id
 -- ##### End Query #####
 
 -- ##### Begin Query: GetMdmCopyCustomers #####

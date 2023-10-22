@@ -110,5 +110,11 @@ public class CustomerDataOrchestrationController : ControllerBase
         return Ok(data);
     }
 
+    [HttpPost("get-customer-details")]
+    public ActionResult<CustomerDetailsDto> GetCustomerDetails(SearchCustomerDto request)
+    {
+        var result = _service.GetCustomerDetails(request);
+        return result.ToActionResult();
+    }
 }
 

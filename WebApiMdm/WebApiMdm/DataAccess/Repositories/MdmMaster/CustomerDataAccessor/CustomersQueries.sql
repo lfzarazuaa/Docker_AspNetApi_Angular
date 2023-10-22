@@ -1,7 +1,7 @@
 -- ##### Customer Queries #####
 
 -- ##### Begin Declare Variables #####
-DECLARE @Name NVARCHAR(50);
+DECLARE @Name NVARCHAR(50), @Guid VARCHAR(20), @Username VARCHAR(20), @Email VARCHAR(20);
 -- ##### End Declare Variables #####
 
 -- ##### Begin Query: TruncateCopiedCustomers #####
@@ -172,4 +172,19 @@ SELECT
 FROM NumberedFinalCustomers
 GROUP BY [Guid]
 END
+-- ##### End Query #####
+
+-- ##### Begin Query: GetGuidRowsFromCriteria #####
+WITH GuidFinder AS (
+    SELECT [Guid]
+    FROM [dbo].[FinalCustomers]
+    WHERE 
+        (@Guid IS NOT NULL AND [Guid] = @Guid)
+        OR (@Guid IS NULL AND @Username IS NOT NULL AND [Username] = @Username)
+        OR (@Guid IS NULL AND @Username IS NULL AND @Email IS NOT NULL AND [Email] = @Email)
+)
+
+SELECT DISTINCT fc.[Guid], fc.[OriginalDB] AS OriginalDb, fc.[OriginalDBID] AS OriginalDbId
+FROM [dbo].[FinalCustomers] fc
+JOIN GuidFinder gf ON fc.[Guid] = gf.[Guid]
 -- ##### End Query #####

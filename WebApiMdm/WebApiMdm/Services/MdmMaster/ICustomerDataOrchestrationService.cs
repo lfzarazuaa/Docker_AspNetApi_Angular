@@ -1,5 +1,6 @@
 ﻿using WebApiMdm.Models.Dtos.Request.MdmMaster;
 using WebApiMdm.Models.Dtos.Response.MdmMaster;
+using WebApiMdm.Utils.Helpers;
 
 namespace WebApiMdm.Services.MdmMaster;
 public interface ICustomerDataOrchestrationService
@@ -15,4 +16,5 @@ public interface ICustomerDataOrchestrationService
     public bool DeleteAllCopiedCustomers();
     public bool DeleteAllStagingCustomers();
     public bool DeleteAllFinalCustomers();
+    HttpResult<CustomerDetailsDto> GetCustomerDetails(SearchCustomerDto request);
 }

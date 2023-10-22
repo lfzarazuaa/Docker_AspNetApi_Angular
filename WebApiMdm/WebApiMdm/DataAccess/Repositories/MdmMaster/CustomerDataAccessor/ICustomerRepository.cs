@@ -15,4 +15,5 @@ public interface ICustomerRepository
     IEnumerable<GroupedCustomerDto> GetGroupedStagingCustomers();
     bool SaveStagingCustomers(params IEnumerable<StagingCustomerDto>[] stagingCustomers);
     bool SaveFinalCustomers(params IEnumerable<StagingCustomerDto>[] stagingCustomers);
+    IEnumerable<(string Guid, string OriginalDb, int OriginalDbId)> GetGuidRowsFromCriteria(SearchCustomerDto request);
 }

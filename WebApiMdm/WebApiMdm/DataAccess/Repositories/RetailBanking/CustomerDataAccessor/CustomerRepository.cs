@@ -2,6 +2,7 @@ using Dapper;
 using System.Data;
 using WebApiMdm.DataAccess.Services.Interfaces;
 using WebApiMdm.Models.Dtos.Request.MdmMaster;
+using WebApiMdm.Models.Dtos.Response.RetailBanking;
 
 namespace WebApiMdm.DataAccess.Repositories.RetailBanking.CustomerDataAccessor;
 
@@ -11,10 +12,16 @@ public class CustomerRepository : Repository, ICustomerRepository
     {
     }
 
-    public IEnumerable<dynamic> GetCustomers()
+    public IEnumerable<RetailBankingCustomer> GetCustomers()
     {
         string query = _queries["GetCustomers"];
-        return _connection.Query(query);
+        return _connection.Query<RetailBankingCustomer>(query);
+    }
+
+    public RetailBankingCustomer GetCustomerData(int id)
+    {
+        string query = _queries["GetCustomerData"];
+        return _connection.QueryFirst<RetailBankingCustomer>(query, new { Id = id });
     }
 
     public IEnumerable<CopyCustomerDto> GetMdmCopyCustomers()
